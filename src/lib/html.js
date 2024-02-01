@@ -40,7 +40,7 @@ export function stadaTemplate(standings) {
 
 export function leikirTemplate(data) {
   const title = 'Boltadeildin—leikir!';
-  
+
   // Create an array to store all games information
   const allGamesList = data.map(dataElement => {
     const games = dataElement.games;
@@ -50,7 +50,7 @@ export function leikirTemplate(data) {
     const gamesList = games.map(game => {
       const homeTeam = game.home.name;
       const awayTeam = game.away.name;
-      const gameName = `Date: ${date} | Game: ${homeTeam} - ${awayTeam}`;
+      const gameName = `Date: ${date} | Game: ${homeTeam} vs. ${awayTeam}`;
       return `<ul>${gameName}</ul>`;
     }).join('');
 

@@ -20,12 +20,12 @@ async function main() {
 
   const data = [];
 
-  const teams = parseTeamsJson(await readFile('./data/teams.json'));
-  console.log('teams', teams);
+  //const teams = parseTeamsJson(await readFile('./data/teams.json'));
+  // console.log('teams', teams);
 
   for await (const file of files) {
     if (file.indexOf('gameday') < 0) {
-      console.log('í file', file, 'gameday: ', file.indexOf('gameday'));
+      console.log('Error í file', file, ', index of gameday: ', file.indexOf('gameday'));
       continue;
     }
 
@@ -34,22 +34,30 @@ async function main() {
 
     // console.info('skrá', file);
     if (!fileContents) {
+      console.log('Error. fileContents', fileContents);
       continue;
     }
 
     const parsed = parseGameday(fileContents);
+    // console.log('parsed: ', parsed);
     if (!parsed) {
+      console.error('Error! parsed = ', parsed);
       continue;
     }
-    
-    //console.log('parsed', parsed);
+
+    if (parsed.date === undefined) {
+      console.error('Error. date is undefined');
+      continue;
+    }
+
+    // console.log('parsed', parsed);
     // console.log('parsed.games', parsed.games);
-    //console.log('parsed.date', parsed.date);
+    // console.log('parsed.date', parsed.date);
 
     data.push(parsed);
     // console.log('data', data);
-    //console.log('data.date:', data[0].date);
-    //console.log('data.games:', data[0].games[0].home.name);
+    // console.log('data.date:', data[0].date);
+    // console.log('data.games:', data[0].games[0].home.name);
   }
 
   const calculatedStandings = calculateStandings(data);
