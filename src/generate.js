@@ -7,7 +7,7 @@ import {
 } from './lib/file.js';
 
 import { indexTemplate, leikirTemplate, stadaTemplate } from './lib/html.js';
-import { parseGameday } from './lib/parse.js';
+import { parseGameday, parseTeamsJson } from './lib/parse.js';
 import { calculateStandings } from './lib/score.js';
 
 const INPUT_DIR = './data';
@@ -20,20 +20,36 @@ async function main() {
 
   const data = [];
 
+  const teams = parseTeamsJson(await readFile('./data/teams.json'));
+  console.log('teams', teams);
+
   for await (const file of files) {
     if (file.indexOf('gameday') < 0) {
+      console.log('í file', file, 'gameday: ', file.indexOf('gameday'));
       continue;
     }
-    const fileContents = await readFile(file);
 
-    console.info('parsea skrá', file);
+    const fileContents = await readFile(file);
+    // console.log('fileContents', fileContents);
+
+    // console.info('skrá', file);
     if (!fileContents) {
       continue;
     }
 
     const parsed = parseGameday(fileContents);
+    if (!parsed) {
+      continue;
+    }
+    
+    //console.log('parsed', parsed);
+    // console.log('parsed.games', parsed.games);
+    //console.log('parsed.date', parsed.date);
 
     data.push(parsed);
+    // console.log('data', data);
+    //console.log('data.date:', data[0].date);
+    //console.log('data.games:', data[0].games[0].home.name);
   }
 
   const calculatedStandings = calculateStandings(data);
